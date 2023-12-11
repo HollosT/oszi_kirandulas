@@ -1,22 +1,23 @@
-const {products, categories} = require("../db")
 
 
 exports.Query = {
-    hello: (parent, args, context) => {
-        return "World!"
-    },
-   products: (parent, args, context) => {
-    return products
+   products: (parent, {filter}, {products}) => {
+     let filteredProducts = products;
+
+     if(filter) {
+          if(filter.onSale === true) {
+               filteredProducts = filteredProducts.filter(product => product.onSale)
+          }
+     }
+     return filteredProducts
    },
-   product: (parent, args, context) => {
-        const {id} = args;
+   product: (parent, {id}, {products}) => {
         return products.find(product => product.id === id)  
    },
-   categories: (parent, args, context) => {
+   categories: (parent, args, {categories}) => {
         return categories
    },
-   category: (parent, args, context) => {
-        const {id} = args;
+   category: (parent, {id}, {categories }) => {
         return categories.find(category => category.id === id)
    }
 }
